@@ -21,7 +21,7 @@
 	 **/
 
 	if ( ! defined( 'FM_SLUG' ) ) {
-		define( 'FM_SLUG', 'font-customizer-library' ); // The slug used for translations
+		define( 'FM_SLUG', 'font-manager' ); // The slug used for translations
 	}
 
 	if ( ! defined( 'ABSPATH' ) ) {
