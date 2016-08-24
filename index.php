@@ -303,7 +303,7 @@
 								break;
 							}
 
-							foreach ( $settings as $setting ) {
+							foreach ( $settings['values'] as $setting ) {
 								if ( $setting['id'] == $style ) {
 									$style = $setting['value'];
 									break;
@@ -320,7 +320,7 @@
 								break;
 							}
 
-							foreach ( $settings as $setting ) {
+							foreach ( $settings['values'] as $setting ) {
 								if ( $setting['id'] == $font_id ) {
 									$style = $setting['value'];
 									break;
@@ -339,7 +339,7 @@
 								break;
 							}
 
-							foreach ( $settings as $setting ) {
+							foreach ( $settings['values'] as $setting ) {
 								if ( $setting['id'] == $font_id ) {
 									$fallback_style = $setting['value'];
 									break;
