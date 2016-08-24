@@ -20,8 +20,8 @@
 
 	 **/
 
-	if ( ! defined( 'FCL_SLUG' ) ) {
-		define( 'FCL_SLUG', 'font-customizer-library' ); // The slug used for translations
+	if ( ! defined( 'FM_SLUG' ) ) {
+		define( 'FM_SLUG', 'font-customizer-library' ); // The slug used for translations
 	}
 
 	if ( ! defined( 'ABSPATH' ) ) {
@@ -30,12 +30,12 @@
 
 	class FontManager {
 
-		public $fcl = array();
+		public $font_manager = array();
 		public $section_priority = 40;
 		public $typekit = '';
 
 		/**
-		 * Start the FCL manager
+		 * Start the Font manager
 		 * @since 1.0
 		 *
 		 * @param (array) $args Arguments to pass
@@ -73,15 +73,15 @@
 		 **/
 		public function add( $id, $element, $title, $description = '', $args = array() ) {
 			if ( empty( $id ) ) {
-				return new WP_Error( 'no-id', __( 'You need to define an ID.', FCL_SLUG ) );
+				return new WP_Error( 'no-id', __( 'You need to define an ID.', FM_SLUG ) );
 			}
 
 			if ( empty( $element ) ) {
-				return new WP_Error( 'no-element', __( 'You need to define a CSS element.', FCL_SLUG ) );
+				return new WP_Error( 'no-element', __( 'You need to define a CSS element.', FM_SLUG ) );
 			}
 
 			if ( empty( $title ) ) {
-				return new WP_Error( 'no-name', __( 'You need to name the customizer.', FCL_SLUG ) );
+				return new WP_Error( 'no-name', __( 'You need to name the customizer.', FM_SLUG ) );
 			}
 
 			//We sanitize the ID
@@ -128,7 +128,7 @@
 			 *
 			 * @return (array) $default_fonts
 			 **/
-			$default_fonts = apply_filters( 'fcl::default-fonts', $default_fonts, $id, $element, $title, $args );
+			$default_fonts = apply_filters( 'font-manager::default-fonts', $default_fonts, $id, $element, $title, $args );
 
 
 			if ( true === $args['font-family'] ) {
@@ -144,7 +144,7 @@
 							}
 
 							if ( is_string( $args['font-family'][ $key ] ) ) {
-								return new WP_Error( 'font-not-registered', sprintf( __( 'The font "%s" is not registered.', FCL_SLUG ) ) );
+								return new WP_Error( 'font-not-registered', sprintf( __( 'The font "%s" is not registered.', FM_SLUG ) ) );
 							}
 						}
 					}
@@ -154,12 +154,12 @@
 			$default_font_weight = array(
 				array(
 					'id'    => 'normal',
-					'name'  => __( 'Normal 400', FCL_SLUG ),
+					'name'  => __( 'Normal 400', FM_SLUG ),
 					'value' => 'normal',
 				),
 				array(
 					'id'    => 'bold',
-					'name' => __( 'Bold 600', FCL_SLUG ),
+					'name' => __( 'Bold 600', FM_SLUG ),
 					'value' => 'bold',
 				),
 			);
@@ -175,7 +175,7 @@
 			 *
 			 * @return (array) $default_fonts
 			 **/
-			$default_font_weight = apply_filters( 'fcl::default-font-weight', $default_font_weight, $id, $element, $title, $args );
+			$default_font_weight = apply_filters( 'font-manager::default-font-weight', $default_font_weight, $id, $element, $title, $args );
 
 
 			if ( true === $args['font-weight'] ) {
@@ -191,7 +191,7 @@
 							}
 
 							if ( is_string( $args['font-weight'][ $key ] ) ) {
-								return new WP_Error( 'font-weight-not-registered', sprintf( __( 'The font weight "%s" is not registered.', FCL_SLUG ) ) );
+								return new WP_Error( 'font-weight-not-registered', sprintf( __( 'The font weight "%s" is not registered.', FM_SLUG ) ) );
 							}
 						}
 					}
@@ -210,7 +210,7 @@
 			 *
 			 * @return (array) $args
 			 **/
-			$args = apply_filters( 'fcl::args', $args, $id, $element, $title );
+			$args = apply_filters( 'font-manager::args', $args, $id, $element, $title );
 
 			$new_setting = array(
 				'id'          => $id,
@@ -220,7 +220,7 @@
 				'args'        => $args,
 			);
 
-			$this->fcl[ $id ] = $new_setting;
+			$this->font_manager[ $id ] = $new_setting;
 			return true;
 		}
 
@@ -245,31 +245,31 @@
 		 **/
 		public function output() {
 
-			if ( count( $this->fcl ) == 0 ) {
+			if ( count( $this->font_manager ) == 0 ) {
 				return;
 			}
 
 			$render = array();
 			$font_links = array();
-			foreach ( $this->fcl as $section_id => $fcl ) {
-				$render[ $fcl['element'] ] = array();
-				foreach( $fcl['args'] as $property => $settings ) {
+			foreach ( $this->font_manager as $section_id => $fmng ) {
+				$render[ $fmng['element'] ] = array();
+				foreach( $fmng['args'] as $property => $settings ) {
 					switch ( $property ) {
 						case 'font-size':
 							$style = get_theme_mod(
-								'fcl-font-size-' . $section_id
+								'fmng-font-size-' . $section_id
 							);
 							break;
 						
 						case 'line-height':
 							$style = get_theme_mod(
-								'fcl-line-height-' . $section_id
+								'fmng-line-height-' . $section_id
 							);
 							break;
 				
 						case 'font-weight':
 							$style = get_theme_mod(
-								'fcl-font-weight-' . $section_id
+								'fmng-font-weight-' . $section_id
 							);
 							if ( ! $style ) {
 								break;
@@ -285,7 +285,7 @@
 
 						case 'font-family':
 							$font_id = get_theme_mod(
-								'fcl-font-family-' . $section_id
+								'fmng-font-family-' . $section_id
 							);
 
 							if ( ! $font_id ) {
@@ -304,7 +304,7 @@
 							}
 
 							$font_id = get_theme_mod(
-								'fcl-font-family-fallback-' . $section_id
+								'fmng-font-family-fallback-' . $section_id
 							);
 
 							if ( ! $font_id ) {
@@ -330,7 +330,7 @@
 					}
 
 					if ( ! empty( $style ) ) {
-						$rendered[ $fcl['element'] ][ $property ] = $style;
+						$rendered[ $fmng['element'] ][ $property ] = $style;
 					}
 				}
 			}
@@ -342,11 +342,11 @@
 			if ( count( $font_links ) > 0 ) {
 				$font_links = array_unique( $font_links );
 				foreach( $font_links as $font ) {
-					echo '<link class="fcl-font" rel="stylesheet" href="' . $font . '">';
+					echo '<link class="fmng-font" rel="stylesheet" href="' . $font . '">';
 				}
 			}
 
-			echo '<style id="fcl">';
+			echo '<style id="fmng">';
 			foreach ( $rendered as $element => $properties ) {
 				echo $element . '{';
 				foreach ( $properties as $property => $style ) {
@@ -372,48 +372,48 @@
 		 * @return (void)
 		 **/
 		public function customizer( $wp_customize ) {
-			if ( count( $this->fcl ) == 0 ) {
+			if ( count( $this->font_manager ) == 0 ) {
 				return;
 			}
 
 			$wp_customize->add_panel(
-				'fcl',
+				'fmng',
 				array(
-					'title'       => __( 'Fonts Manager', FCL_SLUG ),
+					'title'       => __( 'Fonts Manager', FM_SLUG ),
 					'priority'    => $this->section_priority,
-					'description' => __( 'Manage the appearence of your fonts.', FCL_SLUG ),
+					'description' => __( 'Manage the appearence of your fonts.', FM_SLUG ),
 				)
 			);
 
-			foreach ( $this->fcl as $section_id => $fcl ) {
+			foreach ( $this->font_manager as $section_id => $fmng ) {
 				$wp_customize->add_section( 
-					'fcl-section-' . $section_id, 
+					'fmng-section-' . $section_id, 
 					array(
 						'priority'       => 10,
 						'capability'     => 'edit_theme_options',
-						'title'          => $fcl['title'],
-						'description'    => $fcl['description'],
-						'panel'          => 'fcl',
+						'title'          => $fmng['title'],
+						'description'    => $fmng['description'],
+						'panel'          => 'fmng',
 					) 
 				);
 
-				foreach ( $fcl['args'] as $property => $setting ) {
+				foreach ( $fmng['args'] as $property => $setting ) {
 					switch ( $property ) {
 						case "font-size":
 							$wp_customize->add_setting(
-								'fcl-font-size-' . $section_id,
+								'fmng-font-size-' . $section_id,
 								array(
 									'default' => ''
 								)
 							);
 
 							$wp_customize->add_control(
-								'fcl-font-size-controller-' . $section_id, 
+								'fmng-font-size-controller-' . $section_id, 
 								array(
-									'label'       => __( 'Font size', FCL_SLUG ),
-									'description' => __( 'Change the font size of the element.', FCL_SLUG ),
-									'section'     => 'fcl-section-' . $section_id,
-									'settings'    => 'fcl-font-size-' . $section_id,
+									'label'       => __( 'Font size', FM_SLUG ),
+									'description' => __( 'Change the font size of the element.', FM_SLUG ),
+									'section'     => 'fmng-section-' . $section_id,
+									'settings'    => 'fmng-font-size-' . $section_id,
 									'type'        => 'text',
 								)
 							);
@@ -422,19 +422,19 @@
 						case "line-height":
 
 							$wp_customize->add_setting(
-								'fcl-line-height-' . $section_id,
+								'fmng-line-height-' . $section_id,
 								array(
 									'default' => 1,
 								)
 							);
 
 							$wp_customize->add_control(
-								'fcl-line-height-controller-' . $section_id, 
+								'fmng-line-height-controller-' . $section_id, 
 								array(
-									'label'       => __( 'Line height', FCL_SLUG ),
-									'description' => __( 'Change the line height of the element.', FCL_SLUG ),
-									'section'     => 'fcl-section-' . $section_id,
-									'settings'    => 'fcl-line-height-' . $section_id,
+									'label'       => __( 'Line height', FM_SLUG ),
+									'description' => __( 'Change the line height of the element.', FM_SLUG ),
+									'section'     => 'fmng-section-' . $section_id,
+									'settings'    => 'fmng-line-height-' . $section_id,
 									'type'        => 'text',
 								)
 							);
@@ -442,7 +442,7 @@
 
 						case "font-weight":
 							$wp_customize->add_setting(
-								'fcl-font-weight-' . $section_id,
+								'fmng-font-weight-' . $section_id,
 								array(
 									'default' => 'normal',
 								)
@@ -458,12 +458,12 @@
 							}
 
 							$wp_customize->add_control(
-								'fcl-font-weight-controller-' . $section_id, 
+								'fmng-font-weight-controller-' . $section_id, 
 								array(
-									'label'       => __( 'Font weight', FCL_SLUG ),
-									'description' => __( 'Change the font weight of the element.', FCL_SLUG ),
-									'section'     => 'fcl-section-' . $section_id,
-									'settings'    => 'fcl-font-weight-' . $section_id,
+									'label'       => __( 'Font weight', FM_SLUG ),
+									'description' => __( 'Change the font weight of the element.', FM_SLUG ),
+									'section'     => 'fmng-section-' . $section_id,
+									'settings'    => 'fmng-font-weight-' . $section_id,
 									'type'        => 'select',
 									'choices'     => $choices,
 								)
@@ -481,37 +481,37 @@
 							}
 
 							$wp_customize->add_setting(
-								'fcl-font-family-' . $section_id,
+								'fmng-font-family-' . $section_id,
 								array(
 									'default' => '',
 								)
 							);
 							$wp_customize->add_control(
-								'fcl-font-family-controller-' . $section_id, 
+								'fmng-font-family-controller-' . $section_id, 
 								array(
-									'label'       => __( 'Font family', FCL_SLUG ),
-									'description' => __( 'Change the font family of the element.', FCL_SLUG ),
-									'section'     => 'fcl-section-' . $section_id,
-									'settings'    => 'fcl-font-family-' . $section_id,
+									'label'       => __( 'Font family', FM_SLUG ),
+									'description' => __( 'Change the font family of the element.', FM_SLUG ),
+									'section'     => 'fmng-section-' . $section_id,
+									'settings'    => 'fmng-font-family-' . $section_id,
 									'type'        => 'select',
 									'choices'     => $choices,
 								)
 							);
 
 							$wp_customize->add_setting(
-								'fcl-font-family-fallback-' . $section_id,
+								'fmng-font-family-fallback-' . $section_id,
 								array(
 									'default' => '',
 								)
 							);
 
 							$wp_customize->add_control(
-								'fcl-font-family-fallback-controller-' . $section_id, 
+								'fmng-font-family-fallback-controller-' . $section_id, 
 								array(
-									'label'       => __( 'Font fallback', FCL_SLUG ),
-									'description' => __( 'Change the fallback font of the element.', FCL_SLUG ),
-									'section'     => 'fcl-section-' . $section_id,
-									'settings'    => 'fcl-font-family-fallback-' . $section_id,
+									'label'       => __( 'Font fallback', FM_SLUG ),
+									'description' => __( 'Change the fallback font of the element.', FM_SLUG ),
+									'section'     => 'fmng-section-' . $section_id,
+									'settings'    => 'fmng-font-family-fallback-' . $section_id,
 									'type'        => 'select',
 									'choices'     => $choices,
 								)
