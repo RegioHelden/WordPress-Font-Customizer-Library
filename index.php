@@ -154,9 +154,9 @@
 				);
 			}
 
-			if ( true === $args['font-family']['values'] ) {
+			if ( isset( $args['font-family']['values'] ) && true === $args['font-family']['values'] ) {
 				$args['font-family']['values'] = $default_fonts;
-			} elseif ( is_array( $args['font-family']['values'] ) ) {
+			} elseif ( ! empty( $args['font-family']['values'] ) && is_array( $args['font-family']['values'] ) ) {
 				foreach ( $args['font-family']['values'] as $key => $font ) {
 
 					//When only the name is given, we load the font from the default fonts by name
@@ -477,7 +477,7 @@
 
 						case "font-weight":
 							$choices = array();
-							if ( ! is_array( $setting['values'] ) ) {
+							if ( empty( $setting['values'] || ! is_array( $setting['values'] ) ) {
 								break;
 							}
 
@@ -512,7 +512,7 @@
 				
 						case "font-family":
 							$choices = array();
-							if ( ! is_array( $setting['values'] ) ) {
+							if ( empty( $setting['values'] || ! is_array( $setting['values'] ) ) {
 								break;
 							}
 
