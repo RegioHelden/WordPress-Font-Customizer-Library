@@ -206,9 +206,9 @@
 				);
 			}
 
-			if ( true === $args['font-weight']['values'] ) {
+			if ( isset( $args['font-weight']['values'] ) && true === $args['font-weight']['values'] ) {
 				$args['font-weight']['values'] = $default_font_weight;
-			} elseif ( is_array( $args['font-weight']['values'] ) ) {
+			} elseif ( ! empty( $args['font-weight']['values'] ) && is_array( $args['font-weight']['values'] ) ) {
 				foreach ( $args['font-weight']['values'] as $key => $weight ) {
 
 					//When only the name is given, we load the font weight from the default weights by name
