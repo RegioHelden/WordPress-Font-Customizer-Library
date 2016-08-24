@@ -477,7 +477,7 @@
 
 						case "font-weight":
 							$choices = array();
-							if ( empty( $setting['values'] || ! is_array( $setting['values'] ) ) {
+							if ( empty( $setting['values'] ) || ! is_array( $setting['values'] ) ) {
 								break;
 							}
 
@@ -512,7 +512,7 @@
 				
 						case "font-family":
 							$choices = array();
-							if ( empty( $setting['values'] || ! is_array( $setting['values'] ) ) {
+							if ( empty( $setting['values'] ) || ! is_array( $setting['values'] ) ) {
 								break;
 							}
 
