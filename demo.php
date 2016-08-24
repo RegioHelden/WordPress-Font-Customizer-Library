@@ -80,7 +80,7 @@
 	$fcl->add(
 		'my-id4',
 		'body h2.entry-title',
-		'The post title',
+		'The Post Title',
 		'Change the font settings for the post title.',
 		array(
 			'font-family' => $font_families, //enables the font-family selector, and uses the defined fonts
