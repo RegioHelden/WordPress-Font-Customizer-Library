@@ -21,7 +21,7 @@
 	 **/
 
 	if ( ! defined( 'FM_SLUG' ) ) {
-		define( 'FM_SLUG', 'font-customizer-library' ); // The slug used for translations
+		define( 'FM_SLUG', 'font-manager' ); // The slug used for translations
 	}
 
 	if ( ! defined( 'ABSPATH' ) ) {
@@ -33,6 +33,7 @@
 		public $font_manager = array();
 		public $section_priority = 40;
 		public $typekit = '';
+		public $defaults = array();		//Contains the default values for 'font-size', 'font-weight', 'line-height' and 'font-family'
 
 		/**
 		 * Start the Font manager
@@ -50,6 +51,23 @@
 			$args = wp_parse_args( $args, $defaults );
 			$this->section_priority = $args['section_priority'];
 
+			/* Filters the default values.
+			 * @since 1.0
+			 * 
+			 * @param (array) $defaults The default values
+			 * @param (array) $args     The arguments
+			 *
+			 * @return (array) $defaults
+			 **/
+			$defaults = array(
+				'font-size'   => '16px',
+				'font-weight' => 'normal',
+				'line-height' => '1',
+				'font-family' => 'open-sans',
+			);
+			$this->defaults = apply_filters( 'font-manager::defaults', $defaults, $args );
+
+			//Hook into the actions
 			add_action( 'wp_footer', array( $this, 'output' ) );
 			add_action( 'customize_register', array( $this, 'customizer' ) );
 		}
@@ -130,20 +148,25 @@
 			 **/
 			$default_fonts = apply_filters( 'font-manager::default-fonts', $default_fonts, $id, $element, $title, $args );
 
+			if ( true === $args['font-family']  ) {
+				$args['font-family'] = array(
+					'values' => true,
+				);
+			}
 
-			if ( true === $args['font-family'] ) {
-				$args['font-family'] = $default_fonts;
-			} elseif ( is_array( $args['font-family'] ) ) {
-				foreach ( $args['font-family'] as $key => $font ) {
+			if ( isset( $args['font-family']['values'] ) && true === $args['font-family']['values'] ) {
+				$args['font-family']['values'] = $default_fonts;
+			} elseif ( ! empty( $args['font-family']['values'] ) && is_array( $args['font-family']['values'] ) ) {
+				foreach ( $args['font-family']['values'] as $key => $font ) {
 
 					//When only the name is given, we load the font from the default fonts by name
 					if ( is_string( $font ) ) {
 						foreach ( $default_fonts as $default_font ) {
 							if ( $default_font['name'] == $font ) {
-								$args['font-family'][ $key ] = $default_font;
+								$args['font-family']['values'][ $key ] = $default_font;
 							}
 
-							if ( is_string( $args['font-family'][ $key ] ) ) {
+							if ( is_string( $args['font-family']['values'][ $key ] ) ) {
 								return new WP_Error( 'font-not-registered', sprintf( __( 'The font "%s" is not registered.', FM_SLUG ) ) );
 							}
 						}
@@ -177,20 +200,25 @@
 			 **/
 			$default_font_weight = apply_filters( 'font-manager::default-font-weight', $default_font_weight, $id, $element, $title, $args );
 
+			if ( true === $args['font-weight']  ) {
+				$args['fonts-weight'] = array(
+					'values' => true,
+				);
+			}
 
-			if ( true === $args['font-weight'] ) {
-				$args['font-weight'] = $default_font_weight;
-			} elseif ( is_array( $args['font-weight'] ) ) {
-				foreach ( $args['font-weight'] as $key => $weight ) {
+			if ( isset( $args['font-weight']['values'] ) && true === $args['font-weight']['values'] ) {
+				$args['font-weight']['values'] = $default_font_weight;
+			} elseif ( ! empty( $args['font-weight']['values'] ) && is_array( $args['font-weight']['values'] ) ) {
+				foreach ( $args['font-weight']['values'] as $key => $weight ) {
 
 					//When only the name is given, we load the font weight from the default weights by name
 					if ( is_string( $weight ) ) {
 						foreach ( $default_font_weight as $font_weight ) {
 							if ( $font_weight['name'] == $weight ) {
-								$args['font-weight'][ $key ] = $font_weight;
+								$args['font-weight']['values'][ $key ] = $font_weight;
 							}
 
-							if ( is_string( $args['font-weight'][ $key ] ) ) {
+							if ( is_string( $args['font-weight']['values'][ $key ] ) ) {
 								return new WP_Error( 'font-weight-not-registered', sprintf( __( 'The font weight "%s" is not registered.', FM_SLUG ) ) );
 							}
 						}
@@ -275,7 +303,7 @@
 								break;
 							}
 
-							foreach ( $settings as $setting ) {
+							foreach ( $settings['values'] as $setting ) {
 								if ( $setting['id'] == $style ) {
 									$style = $setting['value'];
 									break;
@@ -292,7 +320,7 @@
 								break;
 							}
 
-							foreach ( $settings as $setting ) {
+							foreach ( $settings['values'] as $setting ) {
 								if ( $setting['id'] == $font_id ) {
 									$style = $setting['value'];
 									break;
@@ -311,7 +339,7 @@
 								break;
 							}
 
-							foreach ( $settings as $setting ) {
+							foreach ( $settings['values'] as $setting ) {
 								if ( $setting['id'] == $font_id ) {
 									$fallback_style = $setting['value'];
 									break;
@@ -400,10 +428,14 @@
 				foreach ( $fmng['args'] as $property => $setting ) {
 					switch ( $property ) {
 						case "font-size":
+							$default = $this->defaults['font-size'];
+							if ( true !== $setting ) {
+								$default = $setting;
+							}
 							$wp_customize->add_setting(
 								'fmng-font-size-' . $section_id,
 								array(
-									'default' => ''
+									'default' => $default,
 								)
 							);
 
@@ -420,11 +452,14 @@
 							break;
 
 						case "line-height":
-
+							$default = $this->defaults['line-height'];
+							if ( true !== $setting ) {
+								$default = $setting;
+							}
 							$wp_customize->add_setting(
 								'fmng-line-height-' . $section_id,
 								array(
-									'default' => 1,
+									'default' => $default,
 								)
 							);
 
@@ -441,21 +476,26 @@
 							break;
 
 						case "font-weight":
-							$wp_customize->add_setting(
-								'fmng-font-weight-' . $section_id,
-								array(
-									'default' => 'normal',
-								)
-							);
-
 							$choices = array();
-							if ( ! is_array( $setting ) ) {
+							if ( empty( $setting['values'] ) || ! is_array( $setting['values'] ) ) {
 								break;
 							}
 
-							foreach ( $setting as $choice ) {
+							foreach ( $setting['values'] as $choice ) {
 								$choices[ $choice['id'] ] = $choice['name'];
 							}
+
+							$default = $this->defaults['font-weight'];
+							if ( ! empty( $setting['default'] ) ) {
+								$default = $setting['default'];
+							}
+
+							$wp_customize->add_setting(
+								'fmng-font-weight-' . $section_id,
+								array(
+									'default' => $default,
+								)
+							);
 
 							$wp_customize->add_control(
 								'fmng-font-weight-controller-' . $section_id, 
@@ -472,18 +512,23 @@
 				
 						case "font-family":
 							$choices = array();
-							if ( ! is_array( $setting ) ) {
+							if ( empty( $setting['values'] ) || ! is_array( $setting['values'] ) ) {
 								break;
 							}
 
-							foreach ( $setting as $choice ) {
+							foreach ( $setting['values'] as $choice ) {
 								$choices[ $choice['id'] ] = $choice['name'];
+							}
+
+							$default = $this->defaults['font-family'];
+							if ( ! empty( $setting['default'] ) ) {
+								$default = $setting['default'];
 							}
 
 							$wp_customize->add_setting(
 								'fmng-font-family-' . $section_id,
 								array(
-									'default' => '',
+									'default' => $default,
 								)
 							);
 							$wp_customize->add_control(
@@ -501,7 +546,7 @@
 							$wp_customize->add_setting(
 								'fmng-font-family-fallback-' . $section_id,
 								array(
-									'default' => '',
+									'default' => $default,
 								)
 							);
 

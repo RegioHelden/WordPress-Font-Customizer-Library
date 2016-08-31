@@ -23,10 +23,10 @@
 		'Headings',                               //title
 		'Change the font settings for headings.', //description
 		array(
-			'font-size'   => false, //disables the font-size selector
-			'font-weight' => true,  //enables the font-weight selector, enabled by default
-			'font-family' => true,  //enables the font-family selector, enabled by default
-			'line-height' => true,  //enables the line-height selector, enabled by default
+			'font-size'   => false,  //disables the font-size selector.
+			'font-weight' => 'bold', //enables the font-weight selector and sets the default to 'bold', enabled by default, you can also just use a boolean.
+			'font-family' => true,   //enables the font-family selector, enabled by default.
+			'line-height' => true,   //enables the line-height selector, enabled by default.
 		)
 	);
 
@@ -57,7 +57,10 @@
 		'Posttext',
 		'Change the font settings for the post texts.',
 		array(
-			'font-weight' => $font_weights, //enables the font-weight selector, and uses the defined weights
+			'font-weight' => array( 
+				'default' => 'bold', 
+				'values' => $font_weights,
+			), //enables the font-weight selector, and uses the defined weights
 		)
 	);
 
@@ -80,9 +83,12 @@
 	$fcl->add(
 		'my-id4',
 		'body h2.entry-title',
-		'The post title',
+		'The Post Title',
 		'Change the font settings for the post title.',
 		array(
-			'font-family' => $font_families, //enables the font-family selector, and uses the defined fonts
+			'font-family' => array( 
+				'default' => 'baloo-da', 
+				'values' => $font_families, 
+			), //enables the font-family selector, and uses the defined fonts
 		)
 	);
