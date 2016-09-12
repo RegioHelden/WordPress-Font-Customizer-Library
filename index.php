@@ -201,9 +201,8 @@
 			 * @return (array) $default_fonts
 			 **/
 			$default_font_weight = apply_filters( 'font-manager::default-font-weight', $default_font_weight, $id, $element, $title, $args );
-
 			if ( true === $args['font-weight']  ) {
-				$args['fonts-weight'] = array(
+				$args['font-weight'] = array(
 					'values' => true,
 				);
 			}
