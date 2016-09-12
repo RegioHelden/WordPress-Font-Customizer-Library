@@ -23,10 +23,11 @@
 		'Headings',                               //title
 		'Change the font settings for headings.', //description
 		array(
-			'font-size'   => false,  //disables the font-size selector.
-			'font-weight' => 'bold', //enables the font-weight selector and sets the default to 'bold', enabled by default, you can also just use a boolean.
-			'font-family' => true,   //enables the font-family selector, enabled by default.
-			'line-height' => true,   //enables the line-height selector, enabled by default.
+			'font-size'   => false,     //disables the font-size selector.
+			'font-weight' => 'bold',    //enables the font-weight selector and sets the default to 'bold', enabled by default, you can also just use a boolean.
+			'font-family' => true,      //enables the font-family selector, enabled by default.
+			'line-height' => true,      //enables the line-height selector, enabled by default.
+			'color'       => '#00ff00', //enables the color selector, and sets the default color to '#00ff00'. Default: `true`.
 		)
 	);
 

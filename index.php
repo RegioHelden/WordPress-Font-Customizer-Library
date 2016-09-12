@@ -64,6 +64,7 @@
 				'font-weight' => 'normal',
 				'line-height' => '1',
 				'font-family' => 'open-sans',
+				'color'       => '#000',
 			);
 			$this->defaults = apply_filters( 'font-manager::defaults', $defaults, $args );
 
@@ -110,6 +111,7 @@
 				'font-weight' => true,
 				'font-family' => true,
 				'line-height' => true,
+				'color'       => true,
 			);
 			$args = wp_parse_args( $args, $default );
 
@@ -283,6 +285,11 @@
 				$render[ $fmng['element'] ] = array();
 				foreach( $fmng['args'] as $property => $settings ) {
 					switch ( $property ) {
+						case 'color':
+							$style = get_theme_mod(
+								'fmng-color-' . $section_id
+							);
+							break;
 						case 'font-size':
 							$style = get_theme_mod(
 								'fmng-font-size-' . $section_id
@@ -427,6 +434,32 @@
 
 				foreach ( $fmng['args'] as $property => $setting ) {
 					switch ( $property ) {
+						case "color":
+							$default = $this->defaults['color'];
+							if ( true !== $setting ) {
+								$default = $setting;
+							}
+							$wp_customize->add_setting(
+								'fmng-color-' . $section_id,
+								array(
+									'default' => $default,
+								)
+							);
+
+							$wp_customize->add_control(
+								new WP_Customize_Color_Control( 
+									$wp_customize,
+									'fmng-color-controller-' . $section_id,
+									array(
+										'label'      => __( 'Font color', FM_SLUG ),
+										'section'    => 'fmng-section-' . $section_id,
+										'settings'   => 'fmng-color-' . $section_id,
+									)
+								)
+							);
+
+							break;
+
 						case "font-size":
 							$default = $this->defaults['font-size'];
 							if ( true !== $setting ) {
