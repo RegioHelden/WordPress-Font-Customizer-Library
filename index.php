@@ -435,6 +435,9 @@
 				foreach ( $fmng['args'] as $property => $setting ) {
 					switch ( $property ) {
 						case "color":
+							if ( false === $setting ) {
+								break;
+							}
 							$default = $this->defaults['color'];
 							if ( true !== $setting ) {
 								$default = $setting;
@@ -461,6 +464,9 @@
 							break;
 
 						case "font-size":
+							if ( false === $setting ) {
+								break;
+							}
 							$default = $this->defaults['font-size'];
 							if ( true !== $setting ) {
 								$default = $setting;
@@ -485,6 +491,9 @@
 							break;
 
 						case "line-height":
+							if ( false === $setting ) {
+								break;
+							}
 							$default = $this->defaults['line-height'];
 							if ( true !== $setting ) {
 								$default = $setting;
@@ -509,6 +518,9 @@
 							break;
 
 						case "font-weight":
+							if ( false === $setting ) {
+								break;
+							}
 							$choices = array();
 							if ( empty( $setting['values'] ) || ! is_array( $setting['values'] ) ) {
 								break;
@@ -544,6 +556,9 @@
 							break;
 				
 						case "font-family":
+							if ( false === $setting ) {
+								break;
+							}
 							$choices = array();
 							if ( empty( $setting['values'] ) || ! is_array( $setting['values'] ) ) {
 								break;
