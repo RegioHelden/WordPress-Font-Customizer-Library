@@ -283,7 +283,7 @@
 			$font_links = array();
 			foreach ( $this->font_manager as $section_id => $fmng ) {
 				$render[ $fmng['element'] ] = array();
-				foreach( $fmng['args'] as $property => $settings ) {
+				foreach ( $fmng['args'] as $property => $settings ) {
 					switch ( $property ) {
 						case 'color':
 							$style = get_theme_mod(
@@ -393,7 +393,7 @@
 
 
 
-			if( ! empty( $this->typekit ) ) {
+			if ( ! empty( $this->typekit ) ) {
 				echo '<script src="' . $this->typekit . '"></script><script>try{Typekit.load();}catch(e){}</script>';
 			}
 		}
@@ -407,7 +407,7 @@
 		 * @return (void)
 		 **/
 		public function customizer( $wp_customize ) {
-			if ( count( $this->font_manager ) == 0 ) {
+			if ( count( $this->font_manager ) === 0 ) {
 				return;
 			}
 
@@ -438,10 +438,12 @@
 							if ( false === $setting ) {
 								break;
 							}
+
 							$default = $this->defaults['color'];
 							if ( true !== $setting ) {
 								$default = $setting;
 							}
+
 							$wp_customize->add_setting(
 								'fmng-color-' . $section_id,
 								array(
@@ -467,10 +469,12 @@
 							if ( false === $setting ) {
 								break;
 							}
+
 							$default = $this->defaults['font-size'];
 							if ( true !== $setting ) {
 								$default = $setting;
 							}
+
 							$wp_customize->add_setting(
 								'fmng-font-size-' . $section_id,
 								array(
@@ -494,10 +498,12 @@
 							if ( false === $setting ) {
 								break;
 							}
+
 							$default = $this->defaults['line-height'];
 							if ( true !== $setting ) {
 								$default = $setting;
 							}
+
 							$wp_customize->add_setting(
 								'fmng-line-height-' . $section_id,
 								array(
@@ -521,6 +527,7 @@
 							if ( false === $setting ) {
 								break;
 							}
+
 							$choices = array();
 							if ( empty( $setting['values'] ) || ! is_array( $setting['values'] ) ) {
 								break;
@@ -559,6 +566,7 @@
 							if ( false === $setting ) {
 								break;
 							}
+							
 							$choices = array();
 							if ( empty( $setting['values'] ) || ! is_array( $setting['values'] ) ) {
 								break;
